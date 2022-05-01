@@ -33,5 +33,3 @@ Observable<String>
 1. [x] flatMap
 2. [x] flatMapFirst
 3. [x] flatMapLatest
-
-### Author
