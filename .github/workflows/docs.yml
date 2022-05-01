@@ -1,0 +1,56 @@
+name: Docs
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+#  build:
+#    runs-on: macos-latest
+#    steps:
+#    - uses: actions/checkout@v3
+#    - uses: fwal/setup-swift@v1
+#      with:
+#        swift-version: "5.6.0"
+#    - name: Build
+#      run: swift build -v
+#    - name: Run tests
+#      run: swift test -v
+#
+  docs:
+    runs-on: macos-latest
+    # needs: build
+    steps:
+    - uses: actions/checkout@v3
+    
+    - uses: fwal/setup-swift@v1
+      with:
+        swift-version: "5.6.0"
+        
+    - uses: fwcd/swift-docc-action@v1
+      with:
+        target: RxConcurrency
+        output: ./docs
+        hosting-base-path: RxConcurrency
+        disable-indexing: 'true'
+        transform-for-static-hosting: 'true'
+        
+    - name: Init new repo in dist folder and commit generated files
+      run: |
+        cd docs
+        git init
+        git add -A
+        git config --local user.email "action@github.com"
+        git config --local user.name "GitHub Action"
+        git commit -m 'deploy'
+        
+    - name: Force push to destination branch
+      uses: ad-m/github-push-action@v0.6.0
+      with:
+        github_token: ${{ secrets.GITHUB_TOKEN }}
+        branch: docs
+        force: true
+        directory: ./docs
+
