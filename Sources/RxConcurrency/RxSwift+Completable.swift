@@ -20,7 +20,25 @@ public extension PrimitiveSequenceType where Trait == CompletableTrait, Element 
                     completable(.error(error))
                 }
             }
-            
+
+            return Disposables.create {
+                task.cancel()
+            }
+        }
+    }
+
+    static func async<T: AnyObject>(with object: T, handler: @escaping (T) async throws -> Void) -> Completable {
+        Completable.create { completable in
+            let task = Task { [weak object] in
+                guard let object = object else { throw Error.unknown }
+                do {
+                    try await handler(object)
+                    completable(.completed)
+                } catch {
+                    completable(.error(error))
+                }
+            }
+
             return Disposables.create {
                 task.cancel()
             }

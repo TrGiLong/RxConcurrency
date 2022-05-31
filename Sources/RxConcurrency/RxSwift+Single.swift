@@ -19,7 +19,24 @@ public extension PrimitiveSequenceType where Trait == SingleTrait {
                     single(.failure(error))
                 }
             }
-            
+
+            return Disposables.create {
+                task.cancel()
+            }
+        }
+    }
+
+    static func async<T: AnyObject>(with object: T, handler: @escaping (T) async throws -> Element) -> Single<Element> {
+        Single<Element>.create { single in
+            let task = Task { [weak object] in
+                guard let object = object else { throw Error.unknown }
+                do {
+                    single(.success(try await handler(object)))
+                } catch {
+                    single(.failure(error))
+                }
+            }
+
             return Disposables.create {
                 task.cancel()
             }

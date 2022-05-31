@@ -64,4 +64,4 @@ final class RxSwiftObservableTests: XCTestCase {
     }
 }
 
-extension String: Error {}
+extension String: Swift.Error {}
