@@ -1,6 +1,6 @@
 Pod::Spec.new do |s|
   s.name             = 'RxConcurrency'
-  s.version          = '0.1.0'
+  s.version          = '0.1.1'
   s.summary          = 'A small set of extensions that allow to combine new swift concurrency with RxSwift.'
 
   s.description      = <<-DESC
